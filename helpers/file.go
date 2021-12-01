@@ -3,9 +3,12 @@ package helpers
 import (
 	"bufio"
 	"bytes"
+	"io"
 	"io/ioutil"
 	"log"
 	"os"
+	"strconv"
+	"strings"
 )
 
 func GetInput(filename string) []byte {
@@ -44,4 +47,21 @@ func ReadLines(filename string, lineChan chan string) {
 	if err := scanner.Err(); err != nil {
 		log.Fatal("reading standard input:", err)
 	}
+}
+
+func ReadInt64Slice(r io.Reader) []int64 {
+	output := make([]int64, 0)
+	scanner := bufio.NewScanner(r)
+	for scanner.Scan() {
+		line := strings.TrimSpace(scanner.Text())
+		if line == "" {
+			continue
+		}
+		value, err := strconv.ParseInt(line, 10, 64)
+		if err != nil {
+			panic(err)
+		}
+		output = append(output, value)
+	}
+	return output
 }
